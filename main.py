@@ -40,31 +40,30 @@ class Example(QWidget):
         self.map_file = "map.png"
         with open(self.map_file, "wb") as file:
             file.write(self.response.content)
+            file.close()
 
     def initUI(self):
-        print(80)
         self.setGeometry(100, 100, *SCREEN_SIZE)
         self.setWindowTitle('Отображение карты')
 
-        self.pixmap = QPixmap(self.map_file)
         self.image = QLabel(self)
         self.image.move(0, 0)
         self.image.resize(600, 450)
-        self.image.setPixmap(self.pixmap)
+        self.image.setPixmap(QPixmap(self.map_file))
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_PageUp:
-            if self.sizex < 1:
+            if self.sizex < 0.1:
                 self.sizex += 0.01
                 self.sizey += 0.01
         if event.key() == Qt.Key_PageDown:
-            if self.sizex > 0.01:
+            if self.sizex > 0.02:
                 self.sizex -= 0.01
                 self.sizey -= 0.01
-        if event.key() == Qt.Key_Left:
+        if event.key() == Qt.Key_Right:
             if self.corx < 50:
                 self.corx += 0.01
-        if event.key() == Qt.Key_Right:
+        if event.key() == Qt.Key_Left:
             if self.corx > 20.0:
                 self.corx -= 0.01
         if event.key() == Qt.Key_Up:
@@ -74,6 +73,7 @@ class Example(QWidget):
             if self.cory > 40:
                 self.cory -= 0.01
         self.getImage()
+        self.image.setPixmap(QPixmap(self.map_file))
 
 
     def closeEvent(self, event):
